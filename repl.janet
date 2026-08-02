@@ -5,11 +5,12 @@
 (import ./examples/interpreter :prefix "")
 
 
-### Цвета сняты с соседней панели (nvim, tokyonight-moon) через `tmux capture-pane -e`,
-### а не подобраны на глаз: текст 200;211;245 · сиреневый 192;153;255 · голубой 134;225;252
-### · зелёный 195;232;141 · приглушённый 99;109;166 · тёмный 59;66;97.
-### Терминал объявляет RGB (проверено `tmux show -gs terminal-features` и живой печатью),
-### поэтому берём truecolor, а не 256-цветное приближение.
+### The colours were LIFTED from the editor pane next door (nvim, tokyonight-moon)
+### with `tmux capture-pane -e`, not picked by eye: text 200;211;245 · mauve
+### 192;153;255 · cyan 134;225;252 · green 195;232;141 · muted 99;109;166 ·
+### dark 59;66;97. The terminal advertises RGB (checked with
+### `tmux show -gs terminal-features` and by printing), so truecolor is used
+### rather than a 256-colour approximation.
 (def- C @{:name   "\e[1m\e[38;2;134;225;252m"
           :text   "\e[38;2;200;211;245m"
           :dim    "\e[38;2;122;133;190m"
@@ -21,9 +22,10 @@
 (defn- c [k s] (string (C k) s (C :off)))
 
 (defn help []
-  # Шпаргалку красим по смыслу, а не по вкусу: формы, которые человек будет
-  # НАБИРАТЬ, — голубым (как код в соседней панели); пояснения к ним — тише;
-  # линейки — самым тёмным, чтобы держали рамку и не спорили с текстом.
+  # The sheet is coloured by MEANING, not by taste: the forms a person will
+  # TYPE are cyan (the colour code has in the pane next door), the prose about
+  # them is quieter, and the rules are darkest — they hold the frame without
+  # arguing with the text.
   (print (string "\n  " (C :rule) "── " (C :off) (c :name "kanja")
                  (c :rule " · cheat sheet ─────────────────────────────────────────────")))
   (print (string "  " (c :accent "▸ LISTS FOR RELATIONS ARE BUILT WITH (llist 1 2 3), NOT [1 2 3].")))

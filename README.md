@@ -32,13 +32,13 @@ separate tool — it is the same interpreter, asked the other way. That is how
 miniKanren generates **quines**: not by checking candidates, but by composing
 one.
 
-```janet
-(run 1 [q] (evalo q q))
-# ((lambda (_.0) (list _.0 (list 'quote _.0)))
-#  '(lambda (_.0) (list _.0 (list 'quote _.0))))
-```
+![generating a quine](docs/quine.png)
 
-That program was not written by anyone. It was asked for. Run
+That program was not written by anyone. It was asked for. The constraints
+printed beside it are not noise: they are the conditions under which the answer
+holds — the name must be a symbol, and it must differ from `list`, `quote` and
+`closure`. The machine returned both a solution and the boundary of its own
+freedom. Run
 `probes/quine-closes.janet` and the generated program is fed forwards through
 the same interpreter and compared against itself — the verdict is the exit code.
 

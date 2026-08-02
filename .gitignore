@@ -12,3 +12,9 @@ build/
 
 # Scratch files: anything starting with an underscore is a throwaway probe
 _*.janet
+
+# Рабочие документы линии — внутренние, не для публикации.
+# Остаются на диске: это журнал работы, а не документация.
+# Наружу идут README.md и README.ru.md.
+ЗАМЫСЕЛ.md
+ЧТО_ЭТО_ТАКОЕ.md

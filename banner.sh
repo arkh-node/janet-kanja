@@ -1,27 +1,28 @@
 #!/usr/bin/env bash
-# Баннер REPL. Одна строка между двух полосок. Больше ничего.
+# REPL banner. One line between two rules. Nothing else.
 #
-# Как сюда пришли (слово Алексея, 02.08, четыре правки подряд):
-#   1. Без поэзии — строку, которую можно убрать без потери факта, убираем.
-#   2. Без «(help) to start» — помощи ещё нет, обещать нечего.
-#   3. Без версии — она врёт при первой же правке; версию печатает пакетный менеджер.
-#   4. Без рамки и теней — минимум: полоска сверху, полоска снизу, монохром.
+# How it got here, four edits in a row:
+#   1. No poetry — a line that can be removed without losing a fact is removed.
+#   2. No "(help) to start" — there was no help yet, and nothing unbuilt is promised.
+#   3. No version — it goes stale on the first edit; the package manager prints versions.
+#   4. No frame, no shadows — a rule above, a rule below, monochrome.
 #
-# Почему это уместно именно так: в экосистеме Janet заставок нет вовсе. Сам Janet печатает
-# одну строку («Janet 1.41.3 linux/x64/gcc - '(doc)' for help»), библиотеки не печатают
-# ничего — их импортируют. Баннер живёт только при запуске REPL и должен быть тише кода.
+# Why this shape belongs here: the Janet ecosystem has no splash screens at all. Janet
+# itself prints one line ("Janet 1.41.3 linux/x64/gcc - '(doc)' for help"), and libraries
+# print nothing — they get imported. A banner only appears when a REPL is started, and it
+# should be quieter than the code it introduces.
 #
-# 🔴 ЛОКАЛЬ. В локали C bash считает ${#txt} в БАЙТАХ. Здесь ширину никто не считает —
-# полоски фиксированные, — но локаль всё равно ставится: многобайтовые «─» должны выйти
-# знаками, а не мусором в чужом терминале.
-# Проверять правку: env -i LC_ALL=C bash banner.sh
+# 🔴 LOCALE. Under the C locale bash counts ${#txt} in BYTES. Nothing here measures width —
+# the rules are fixed strings — but the locale is set anyway: the multi-byte "─" has to come
+# out as a character rather than as rubbish in someone else's terminal.
+# Check any edit with: env -i LC_ALL=C bash banner.sh
 export LC_ALL=C.UTF-8
 locale -a 2>/dev/null | grep -qi "^C.utf8" || export LC_ALL=en_US.UTF-8
 set -u
 
 R='\033[0m'; B='\033[1m'
-RULE='\033[38;5;242m'     # полоски — тише текста
-SUB='\033[38;5;250m'      # подпись
+RULE='\033[38;5;242m'     # rules — quieter than the text
+SUB='\033[38;5;250m'      # the subtitle
 
 NAME="${KANJA_NAME:-kanja}"
 DESC="${KANJA_DESC:-miniKanren for Janet}"
