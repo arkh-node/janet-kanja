@@ -1,0 +1,17 @@
+(import ../kanja :prefix "")
+(import ../kanja/relations :prefix "")
+(import ../examples/interpreter :prefix "")
+(defn show-pairs [& forms] (each [caption value] (partition 2 forms)
+  (printf "\n%s" caption) (print (show-all value))))
+(show-pairs
+  "(run* [q] (appendo (llist 1 2) (llist 3 4) q))" (run* [q] (appendo (llist 1 2) (llist 3 4) q))
+  "(run* [q] (appendo (llist 1 2) q (llist 1 2 3 4)))" (run* [q] (appendo (llist 1 2) q (llist 1 2 3 4)))
+  "(run* [q] (fresh [x y] (appendo x y (llist 1 2 3)) (== q (llist x y))))"
+    (run* [q] (fresh [x y] (appendo x y (llist 1 2 3)) (== q (llist x y))))
+  "(run 4 [q] (fresh [x y] (appendo x y q)))" (run 4 [q] (fresh [x y] (appendo x y q)))
+  "(run* [q] (membero q (llist :bread :salt :water)))" (run* [q] (membero q (llist :bread :salt :water)))
+  "(run* [q] (=/= q 5))" (run* [q] (=/= q 5))
+  "(run* [q] (symbolo q))" (run* [q] (symbolo q))
+  "(run* [q] (absento :poison q))" (run* [q] (absento :poison q))
+  "(run* [q] (=/= q 5) (== q 5))" (run* [q] (=/= q 5) (== q 5))
+  "(run 3 [q] (evalo q :treasure))" (run 3 [q] (evalo q :treasure)))

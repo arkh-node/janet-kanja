@@ -1,0 +1,14 @@
+# Editor and shell leftovers
+*.bak
+*.bak[0-9]
+*.bak_*
+*~
+.#*
+
+# jpm build output
+build/
+*.jimage
+*.so
+
+# Scratch files: anything starting with an underscore is a throwaway probe
+_*.janet
