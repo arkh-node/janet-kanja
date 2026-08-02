@@ -54,14 +54,14 @@
 ## Установка
 
 ```
-jpm install https://github.com/a-rybnikov/janet-kanren
+jpm install https://github.com/arkh-node/janet-kanren
 ```
 
 Чистый Janet: ни C, ни FFI, ни системных вызовов. Работает везде, где работает
 сам Janet.
 
 ```
-git clone https://github.com/a-rybnikov/janet-kanren && cd janet-kanren
+git clone https://github.com/arkh-node/janet-kanren && cd janet-kanren
 ./run-tests.sh      # 161 проверка, вердикт — код возврата
 janet repl.janet    # REPL с (help) и десятью готовыми примерами
 ```

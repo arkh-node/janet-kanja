@@ -54,13 +54,13 @@ claims to know less than it does:
 ## Install
 
 ```
-jpm install https://github.com/a-rybnikov/janet-kanren
+jpm install https://github.com/arkh-node/janet-kanren
 ```
 
 Pure Janet: no C, no FFI, no system calls. It runs wherever Janet runs.
 
 ```
-git clone https://github.com/a-rybnikov/janet-kanren && cd janet-kanren
+git clone https://github.com/arkh-node/janet-kanren && cd janet-kanren
 ./run-tests.sh      # 161 checks, the verdict is the exit code
 janet repl.janet    # a REPL with (help) and ten ready examples
 ```
