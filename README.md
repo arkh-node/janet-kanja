@@ -28,7 +28,7 @@ what satisfies it. The same text both checks a solution and finds one.
 
 **Program synthesis.** Write an interpreter as a *relation* between program,
 environment and value, and "which program yields this result?" stops being a
-separate tool — it is the same interpreter, asked the other way. That is how
+separate tool. It is the same interpreter, asked the other way. That is how
 miniKanren generates **quines**: not by checking candidates, but by composing
 one.
 
@@ -36,14 +36,14 @@ one.
 
 That program was not written by anyone. It was asked for. The constraints
 printed beside it are not noise: they are the conditions under which the answer
-holds — the name must be a symbol, and it must differ from `list`, `quote` and
+holds: the name must be a symbol, and it must differ from `list`, `quote` and
 `closure`. The machine returned both a solution and the boundary of its own
 freedom. Run
 `probes/quine-closes.janet` and the generated program is fed forwards through
-the same interpreter and compared against itself — the verdict is the exit code.
+the same interpreter and compared against itself. The verdict is the exit code.
 
 **Honest partial knowledge.** An unbound variable stays in the answer as a hole:
-`(1 _.0 3)` does not mean failure, it means "the second may be anything" — and
+`(1 _.0 3)` does not mean failure, it means "the second may be anything", and
 surviving demands are printed beside it, because an answer that hides them
 claims to know less than it does:
 
@@ -71,7 +71,7 @@ janet repl.janet    # a REPL with (help) and ten ready examples
 |---|---|
 | core | logic variables · unification with occurs check · complete interleaving search |
 | goals | `==` · `=/=` · `fresh` · `conde` · `conj` · `disj` · `succeed` · `fail` |
-| demands | `symbolo` · `numbero` · `absento` — deferred, they fire when a later goal decides them |
+| demands | `symbolo` · `numbero` · `absento`, deferred: they fire when a later goal decides them |
 | asking | `run` · `run*`, over one or several variables |
 | resumable search | `search` · `take-more!` · `search-stats` · `search-exhausted?` |
 | relations | `caro` · `cdro` · `conso` · `nullo` · `pairo` · `listo` · `membero` · `appendo` · `rembero` |
@@ -98,7 +98,7 @@ does not exist, so `search-exhausted?` stays false until one more look comes
 back empty.
 
 If a relation raises, the error is attached to the search and every later take
-returns it again. It is never swallowed and the branch is never skipped —
+returns it again. It is never swallowed and the branch is never skipped, because
 that would make a broken relation indistinguishable from one with no answers.
 
 ## Boundaries
@@ -109,25 +109,25 @@ undiscovered bug.
 🔴 **Lists for relations are built with `(llist 1 2 3)`, not `[1 2 3]`.** A
 Janet tuple has a fixed length and cannot express "a list whose tail is not yet
 known", so relations carry their own pairs. Hand a relation a native tuple and
-it answers *nothing* — and nothing here means "no solutions", which is
+it answers *nothing*, and nothing here means "no solutions", which is
 indistinguishable from a real answer. Tuples still unify with tuples
 element-wise, so ordinary Janet data is fine wherever its shape is fully known.
 
 🔴 **`(quote x)` prints as `'x`.** The canon prints it in full. A deliberate
-step towards the reader — the quine carries four `quote`s and nearly doubles in
-width without it — confined to printing: the engine, the tests and `to-array`
+step towards the reader, since the quine carries four `quote`s and nearly
+doubles in width without it. Confined to printing: the engine, the tests and `to-array`
 know nothing about it.
 
 🔴 **Answer order diverges from the canon on a conjunction of two many-valued
 `conde`.** We give `(1 8) (1 9) (2 8) (2 9)` where the canon gives
-`(1 8) (2 8) (1 9) (2 9)`. Completeness is intact — on an infinite goal the
+`(1 8) (2 8) (1 9) (2 9)`. Completeness is intact: on an infinite goal the
 order matches the canon exactly, and both cases are in the test suite. Found,
 localised and not yet explained; the suite records what the engine does today
 as a *witness*, not as a reference.
 
 - **Not faster than Prolog.** Complete interleaving search pays for completeness
   with speed. The goal is correctness and clarity, not a record.
-- **No CLP(FD)**, no tabling — left recursion is still dangerous.
+- **No CLP(FD)**, no tabling, so left recursion is still dangerous.
 - **Writing into the substitution is linear in its size**, so a long chain of
   bindings is quadratic overall. Known, measured, and fixable with one change
   (a persistent map); not done yet.
@@ -144,29 +144,42 @@ The quine, generated (not verified) on this machine:
 | | quine | unifications |
 |---|---|---|
 | kanja | 143 ms | 1 887 |
-| faster-minikanren (Guile) | 22–36 ms | 13 117 |
+| faster-minikanren (Guile) | 22-36 ms | 13 117 |
 
 We perform an order of magnitude fewer unifications at a higher price each: the
 bottleneck is the cost of one unification, not the walk.
 
 Constraint output matches the canon term for term. Thirty-eight queries were
-run side by side against faster-minikanren under Guile — printed form, answer
-order, holes, occurs check, all four kinds of demand — and the only deliberate
+run side by side against faster-minikanren under Guile: printed form, answer
+order, holes, occurs check, all four kinds of demand. The only deliberate
 difference left is the `'x` shorthand above.
 
 Expectations in the test suite are taken from faster-minikanren run under
-Guile, side by side, query for query — not derived from what this engine
+Guile, side by side, query for query, not derived from what this engine
 happens to print. The suite is also checked by mutation: the engine is broken
 in one place at a time and the battery must go red. It catches 14 breakages out
 of 15. The fifteenth changes no answer, only cost, and is honestly not covered.
 
 ## The name
 
-*kañja* — Sanskrit for lotus, "water-born". Any other reading is yours.
+*kañja* is Sanskrit for lotus, "water-born". Any other reading is yours.
+
+## Authors
+
+Written by **Aleksei Rybnikov** together with **ArkH**, a synthetic mind
+running on Claude Opus 5.
+
+We say this plainly rather than in a footnote. The Janet project asks that any
+use of language models be disclosed, and beyond that requirement a reader has
+the right to weigh the work knowing how it was made. What we would rather be
+judged on is the method: every expected answer in the test suite is taken from
+faster-minikanren running under Guile, side by side, query for query, and the
+suite itself is checked by breaking the engine on purpose and requiring it to
+go red.
 
 ## Lineage
 
-Hewitt, **Planner** (1969) — a goal invokes knowledge by *pattern*, not by name.
+Hewitt, **Planner** (1969): a goal invokes knowledge by *pattern*, not by name.
 Then **Prolog** (Colmerauer, Kowalski, 1972), **Kanren** (Kiselyov),
 **miniKanren** (Friedman, Byrd, Kiselyov; MIT Press, 2005), **µKanren**
 (Hemann & Friedman, 2013). This library is that line, on Janet.
